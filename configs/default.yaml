@@ -1,0 +1,27 @@
+# 최종안(D4) 기본 설정. 실험 구성(D1~D5)은 src/config.py 의 PRESETS 참고.
+detector: haar            # haar | lbp
+clahe: true               # 저조도 보정
+clahe_clip: 2.0
+clahe_tile: 8
+detect_width: 320         # 얼굴 검출용 축소 폭(px). 0이면 원본
+min_neighbors: 3          # cascade minNeighbors (검증 분할에서 5 → 3: 검출률 +1.6%p, 저조도 +4%p)
+track: true               # 검출 사이 LK 추적
+redetect_every: 5         # N 프레임마다 재검출
+max_track_s: 2.0          # 검출 실패 후 추적만으로 버티는 최대 시간
+classifier: cnn           # cnn | svm
+closed_threshold: 0.5     # 눈 감김 확률 임계값
+
+temporal:
+  mode: full              # full(PERCLOS + 연속 감음 + 하품) | closure(연속 감음만)
+  perclos_window_s: 60
+  perclos_min_valid_s: 10 # 창 안에 유효 프레임이 이만큼은 있어야 PERCLOS 판정
+  perclos_caution: 0.15
+  perclos_warning: 0.25    # 검증 세션 선택값 (experiments/eval_temporal)
+  closure_warning_s: 1.5
+  closure_gap_s: 0.1      # 감음 구간 안의 짧은 '뜸' 판정은 무시 (오분류 1~2 프레임)
+  yawn_threshold: 0.5     # 입 영역 HoG+SVM 하품 확률 임계값 (experiments/eval_yawn)
+  yawn_min_s: 1.0
+  yawn_window_s: 300
+  yawn_caution_count: 3
+  unknown_after_s: 1.0    # 얼굴/눈을 못 찾은 상태가 이만큼 이어지면 '판단 불가'
+  warning_hold_s: 3.0     # 경고는 조건이 풀려도 이 시간 동안 유지
